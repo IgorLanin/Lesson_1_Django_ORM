@@ -1,11 +1,13 @@
+from datetime import timezone
 import os
 
 import django
+from django.utils.timezone import localtime
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 django.setup()
 
-from datacenter.models import Passcard  # noqa: E402
+from datacenter.models import Passcard, Visit  # noqa: E402
 
 if __name__ == '__main__':
     # Программируем здесь
@@ -28,3 +30,15 @@ if __name__ == '__main__':
     # Количество активных пропусков без цикла/list comprehension
     active_passcards = Passcard.objects.filter(is_active=True)
     print('Активных пропусков: ', len(active_passcards))
+
+    # В хранилище
+    # visits = Visit.objects.all()
+    # print(visits)
+
+    # Те, кто не вышли:
+    no_leaved_visits = Visit.objects.filter(leaved_at=None)
+
+    for no_leaved_visit in no_leaved_visits:
+        print("Посетитель в хранилище: ", no_leaved_visit.passcard)
+        # print("Зашел в хранилище, время по Москве: ", localtime(value=no_leaved_visit.entered_at, timezone=+3))
+
